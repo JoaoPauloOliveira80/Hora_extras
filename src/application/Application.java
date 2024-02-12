@@ -13,7 +13,7 @@ public class Application {
 
         JanelaPrincipal janelaPrincipal = new JanelaPrincipal(jornadaController);
 
-        LocalDate dataInicio = LocalDate.of(2024, 1, 26);
+        LocalDate dataInicio = LocalDate.of(2024,1, 26);
         LocalDate dataFim = LocalDate.of(2024, 2, 25);
 
         janelaPrincipal.listar(dataInicio, dataFim);

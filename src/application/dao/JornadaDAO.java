@@ -12,19 +12,25 @@ import java.util.List;
 import application.model.Jornada;
 
 public class JornadaDAO {
-	
-	public List<Jornada> listarPorPeriodo(LocalDateTime dataInicio, LocalDateTime dataFim) {
-	    List<Jornada> jornadas = new ArrayList<>();
-	    String sql = "SELECT * FROM JornadasTrabalhoCopia WHERE startJornada BETWEEN ? AND ? ORDER BY startJornada ASC";
-	    
-	    try (Connection conn = ConnectionDB.create();
-	         PreparedStatement pstm = conn.prepareStatement(sql)) {
 
-	        // Define os parâmetros da consulta
+	public List<Jornada> listarPorPeriodo(LocalDateTime dataInicio, LocalDateTime dataFim) {
+		String sql = "SELECT * FROM JornadasTrabalhoCopia WHERE startJornada BETWEEN ? AND ? ORDER BY startJornada ASC";
+
+	    List<Jornada> lista = new ArrayList<>();
+
+	    Connection conn = null;
+	    PreparedStatement pstm = null;
+	    ResultSet rs = null;
+
+	    try {
+	        conn = (Connection) ConnectionDB.create();
+	        pstm = (PreparedStatement) conn.prepareStatement(sql);
+
+	        // Definindo os parâmetros da consulta
 	        pstm.setTimestamp(1, Timestamp.valueOf(dataInicio));
 	        pstm.setTimestamp(2, Timestamp.valueOf(dataFim));
 
-	        ResultSet rs = pstm.executeQuery();
+	        rs = pstm.executeQuery();
 
 	        while (rs.next()) {
 	            Jornada jornada = new Jornada();
@@ -52,15 +58,32 @@ public class JornadaDAO {
 
 	            jornada.setPorcentagem(rs.getInt("porcentagem"));
 
-	            jornadas.add(jornada);
+	            lista.add(jornada);
 	        }
-	    } catch (SQLException e) {
+	    } catch (Exception e) {
 	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (pstm != null) {
+	                pstm.close();
+	            }
+
+	            if (conn != null) {
+	                conn.close();
+	            }
+
+	            if (rs != null) {
+	                rs.close();
+	            }
+	        } catch (Exception e2) {
+	            e2.printStackTrace();
+	        }
 	    }
 
-	    return jornadas;
+	    return lista;
 	}
-	
+
+
 	
     public List<Jornada> listarTodas() {
         List<Jornada> jornadas = new ArrayList<>();

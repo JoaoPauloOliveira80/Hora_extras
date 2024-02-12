@@ -38,13 +38,16 @@ public class JanelaPrincipal extends JFrame {
         this.jornadaController = jornadaController;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 807, 481);
+        
+       // setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setBounds(100, 100, 1000, 550);
+        setLocationRelativeTo(null);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
 
         model = new DefaultTableModel(new Object[] { "Dia trabalhado", "Data", "Início da Jornada", "Fim da Jornada",
-                "Início do Almoço", "Fim do Almoço", "Hora extra dia", "Porcentagem" }, 0) {
+                "Início do Almoço", "Fim do Almoço",  "Hora 70%","Porcentagem" }, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -59,41 +62,38 @@ public class JanelaPrincipal extends JFrame {
             table.getColumnModel().getColumn(i).setCellRenderer(centralizar);
         }
         contentPane.setLayout(null);
-
+        
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(5, 5, 781, 323);
+        scrollPane.setBounds(10, 5, 964, 386);
+        
         contentPane.add(scrollPane);
 
         txtHora70 = new JLabel("HORA EXTRA70%");
         txtHora70.setForeground(new Color(50, 205, 50));
         txtHora70.setFont(new Font("Tahoma", Font.BOLD, 18));
         txtHora70.setHorizontalAlignment(SwingConstants.CENTER);
-        txtHora70.setBounds(112, 405, 226, 37);
+        txtHora70.setBounds(187, 463, 226, 37);
         contentPane.add(txtHora70);
-
-        JLabel label2 = new JLabel("Label 2");
-        label2.setBounds(5, 460, 100, 20);
-        contentPane.add(label2);
 
         txtHora110 = new JLabel("HORA EXTRA110%");
         txtHora110.setForeground(new Color(50, 205, 50));
         txtHora110.setHorizontalAlignment(SwingConstants.CENTER);
         txtHora110.setFont(new Font("Tahoma", Font.BOLD, 18));
-        txtHora110.setBounds(402, 405, 226, 37);
+        txtHora110.setBounds(477, 463, 226, 37);
         contentPane.add(txtHora110);
 
         lblNewLabel = new JLabel("TOTAL HORA EXTRA 70%");
         lblNewLabel.setForeground(new Color(47, 79, 79));
         lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel.setBounds(135, 379, 180, 25);
+        lblNewLabel.setBounds(210, 437, 180, 25);
         contentPane.add(lblNewLabel);
 
         lblTotalHoraExtra = new JLabel("TOTAL HORA EXTRA 110%");
         lblTotalHoraExtra.setHorizontalAlignment(SwingConstants.CENTER);
         lblTotalHoraExtra.setForeground(new Color(47, 79, 79));
         lblTotalHoraExtra.setFont(new Font("Tahoma", Font.BOLD, 13));
-        lblTotalHoraExtra.setBounds(419, 379, 180, 25);
+        lblTotalHoraExtra.setBounds(494, 437, 180, 25);
         contentPane.add(lblTotalHoraExtra);
     }
 
@@ -140,6 +140,8 @@ public class JanelaPrincipal extends JFrame {
             if (porcentagem == 110) {
                 totalJornada110 = totalJornada110.plus(hrExtradiaria);
                 txtHora110.setText(formatarUtils.formatarDuration(totalJornada110));
+            }else {
+            	txtHora110.setText("N/A Hora Extra");
             }
         }
 
