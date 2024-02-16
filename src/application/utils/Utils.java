@@ -1,27 +1,19 @@
 package application.utils;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+
+import com.toedter.calendar.JDateChooser;
+
 public class Utils {
-	public String formatarDataSemHora(LocalDateTime data) {
-		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		return data.format(formato);
-	}
-	
-
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-	private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-	public String converterFormatoData(LocalDateTime data) {
-		return data.format(formatter);
-	}
-
-	public String converterFormatoData(LocalDate data) {
-		return data.format(dateFormatter);
-	}
 
 //	public  Duration calcularTotalHora(Duration duracaoJornada, Duration duracaoAlmoco) {
 //		Duration tempoPadrao = Duration.ofHours(8).plusMinutes(48);
@@ -49,6 +41,11 @@ public class Utils {
 		}
 	}
 
+	public String converterFormatoData(LocalDate data) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		return data.format(formatter);
+	}
+
 	public String formatarData(LocalDateTime data) {
 		DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm");
 		return data.format(formato);
@@ -60,6 +57,48 @@ public class Utils {
 		return String.format("%02d:%02d", horas, minutos);
 	}
 
-	
+	public String formatarDataSemHora(LocalDateTime data) {
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		return data.format(formato);
+	}
 
+	public String converterFormatoData(LocalDateTime data) {
+		DateTimeFormatter formatoSaida = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		return data.format(formatoSaida);
+	}
+
+	
+	public  boolean validarDatasSelecionadas(JDateChooser dateChooser1, JDateChooser dateChooser2) {
+	    if (dateChooser1.getDate() == null || dateChooser2.getDate() == null) {
+	        JOptionPane.showMessageDialog(null, "Por favor, selecione ambas as datas.", "Erro", JOptionPane.ERROR_MESSAGE);
+	        return false;
+	    }
+	    return true;
+	}
+	
+	public LocalDateTime converterFormatoData(String data) {
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    return LocalDate.parse(data, formatter).atStartOfDay();
+	}
+
+	//COLORI AS LINHA DA TABLE
+	// Método para obter um renderizador de linhas alternadas
+    public DefaultTableCellRenderer getRenderizadorLinhasAlternadas() {
+        return new DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                java.awt.Component rendererComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                // Alterna a cor de fundo com base no número da linha
+                if (row % 2 == 0) {
+                    rendererComponent.setBackground(Color.WHITE);
+                } else {
+                    rendererComponent.setBackground(new Color(240, 240, 240)); // Cor alternativa
+                }
+
+                return rendererComponent;
+            }
+        };
+    }
+	
 }
