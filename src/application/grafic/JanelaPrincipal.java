@@ -88,14 +88,14 @@ public class JanelaPrincipal extends JFrame {
 		contentPane.add(scrollPane);
 
 		// Criando o primeiro seletor de data
-		JDateChooser dateChooser1 = new JDateChooser();
+		JDateChooser dateChooser1 = utils.createFormattedDateChooser("##/##/####");
+	//	utils.MascaraData(dateChooser1, "dd/MM/yy");
 		dateChooser1.setPreferredSize(new Dimension(150, 30));
 		dateChooser1.setBounds(10, 11, 150, 30);
 		contentPane.add(new JLabel("Data Inicial:"));
 		contentPane.add(dateChooser1);
 
-		// Criando o segundo seletor de data
-		JDateChooser dateChooser2 = new JDateChooser();
+		JDateChooser dateChooser2 = utils.createFormattedDateChooser("##/##/####");
 		dateChooser2.setPreferredSize(new Dimension(150, 30));
 		dateChooser2.setBounds(180, 11, 150, 30);
 		contentPane.add(new JLabel("Data Final:"));

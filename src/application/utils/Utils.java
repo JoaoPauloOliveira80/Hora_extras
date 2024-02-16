@@ -1,15 +1,20 @@
 package application.utils;
 
 import java.awt.Color;
-import java.awt.Component;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.text.MaskFormatter;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -100,5 +105,43 @@ public class Utils {
             }
         };
     }
+    
+    public  void MascaraData(JDateChooser dateChooser, String formato) {
+        SimpleDateFormat sdf = new SimpleDateFormat(formato);
+        dateChooser.setDateFormatString(formato);
+        dateChooser.setDate(new Date()); // Define a data inicial (opcional)
+    }
 	
+    
+    public  JDateChooser createFormattedDateChooser(String mask) {
+        JDateChooser dateChooser = new JDateChooser();
+        dateChooser.setDateFormatString("dd/MM/yyyy");
+
+        JFormattedTextField formattedTextField = createMaskedTextField(mask);
+
+        dateChooser.addPropertyChangeListener("date", evt -> {
+            if ("date".equals(evt.getPropertyName())) {
+                Object newValue = evt.getNewValue();
+                if (newValue instanceof java.util.Date) {
+                    formattedTextField.setValue(new SimpleDateFormat("dd/MM/yyyy").format(newValue));
+                }
+            }
+        });
+
+        JPanel panel = new JPanel();
+        panel.add(formattedTextField);
+        panel.add(dateChooser);
+
+        return dateChooser;
+    }
+
+    private  JFormattedTextField createMaskedTextField(String mask) {
+        MaskFormatter maskFormatter = null;
+        try {
+            maskFormatter = new MaskFormatter(mask);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new JFormattedTextField(maskFormatter);
+    }
 }
