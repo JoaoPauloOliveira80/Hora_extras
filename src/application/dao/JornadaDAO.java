@@ -14,7 +14,7 @@ import application.model.Jornada;
 public class JornadaDAO {
 
 	public List<Jornada> listarPorPeriodo(LocalDateTime dataInicio, LocalDateTime dataFim) {
-		String sql = "SELECT * FROM JornadasTrabalhoCopia WHERE startJornada BETWEEN ? AND ? ORDER BY startJornada ASC";
+		String sql = "SELECT * FROM JornadasTrabalho WHERE startJornada BETWEEN ? AND ? ORDER BY startJornada ASC";
 
 	    List<Jornada> lista = new ArrayList<>();
 

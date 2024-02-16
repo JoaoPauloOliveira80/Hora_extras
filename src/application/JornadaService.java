@@ -20,7 +20,9 @@ public class JornadaService {
         return jornadaDAO.listarPorPeriodo(dataInicio, dataFim);
     }
 	
-	
+	public List<Jornada> listAll() {
+		return jornadaDAO.listarTodas();
+	}
 	public void getListaPeriodo(LocalDateTime dataInicio, LocalDateTime dataFim) {
 		List<Jornada> jornadas = jornadaDAO.listarPorPeriodo(dataInicio, dataFim);
 		LocalDateTime diaTrabalho;

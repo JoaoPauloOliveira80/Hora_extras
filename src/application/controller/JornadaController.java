@@ -26,4 +26,7 @@ public class JornadaController {
 		return jornadaService.listarPorPeriodo(dataInicio, dataFim);
 	}
 
+	public List<Jornada> listAll(){
+		return jornadaService.listAll();
+	}
 }

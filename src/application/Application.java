@@ -7,16 +7,32 @@ import application.dao.JornadaDAO;
 import application.grafic.JanelaPrincipal;
 
 public class Application {
-    public static void main(String[] args) {
-        JornadaService jornadaService = new JornadaService(new JornadaDAO());
-        JornadaController jornadaController = new JornadaController(jornadaService);
+	public static void main(String[] args) {
+		
+		
+	
+		JornadaService jornadaService = new JornadaService(new JornadaDAO());
+		JornadaController jornadaController = new JornadaController(jornadaService);
 
-        JanelaPrincipal janelaPrincipal = new JanelaPrincipal(jornadaController);
+		
 
-        LocalDate dataInicio = LocalDate.of(2024,1, 26);
-        LocalDate dataFim = LocalDate.of(2024, 2, 25);
+		
+		
+		LocalDate dataInicio = LocalDate.of(2023, 12, 26);
+        LocalDate dataFim = LocalDate.of(2024, 1, 25);
 
-        janelaPrincipal.listar(dataInicio, dataFim);
-        janelaPrincipal.setVisible(true);
-    }
+        JanelaPrincipal janelaPrincipal = new JanelaPrincipal(jornadaController, dataInicio, dataFim);
+
+		
+//		LocalDate dataInicio = LocalDate.of(2023, 11, 26);
+//		LocalDate dataFim = LocalDate.of(2023, 12, 25);
+		
+		
+		
+
+		janelaPrincipal.listar(dataInicio, dataFim);
+		janelaPrincipal.setVisible(true);
+		
+		jornadaController.listAll();
+	}
 }
