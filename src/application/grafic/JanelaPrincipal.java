@@ -1,6 +1,8 @@
 package application.grafic;
 
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,7 +28,6 @@ import application.model.Jornada;
 import application.utils.Utils;
 
 public class JanelaPrincipal extends JFrame {
-	private static final long serialVersionUID = 1L;
 	private Utils utils = new Utils();
 	private JPanel contentPane;
 	private JTable table;
@@ -34,20 +35,15 @@ public class JanelaPrincipal extends JFrame {
 	private JornadaController jornadaController;
 	private int porcentagem;
 	private Duration hrExtradiaria;
-	Duration cem70 = Duration.ZERO;
-	Duration cem110 = Duration.ZERO;
+	private Duration cem70 = Duration.ZERO;
+	private Duration cem110 = Duration.ZERO;
 	private static JanelaPrincipal instance;
-
 
 	@SuppressWarnings("serial")
 	public JanelaPrincipal(JornadaController jornadaController, LocalDate dataInicio, LocalDate dataFim) {
-		
-		
-        
-	
 
-		setTitle("Controle de Jornada - " + utils.converterFormatoData(dataInicio) + " a "
-				+ utils.converterFormatoData(dataFim));
+		setTitle("Controle de Jornada - " + Utils.converterFormatoData(dataInicio) + " a "
+				+ Utils.converterFormatoData(dataFim));
 
 		this.jornadaController = jornadaController;
 
@@ -63,19 +59,75 @@ public class JanelaPrincipal extends JFrame {
 				"Início do Almoço", "Fim do Almoço", "Hora diária", "Porcentagem" }, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				return false;
+				 return false;
 			}
 		};
-
 		table = new JTable(model);
 		table.getTableHeader().setResizingAllowed(false);
 		table.getTableHeader().setReorderingAllowed(false);
-		table.setDefaultRenderer(Object.class, utils.getRenderizadorLinhasAlternadas());
 		table.getTableHeader().setReorderingAllowed(false);
 
-		// ... (outros ajustes ou configurações necessárias)
+		table.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		        if (e.getClickCount() == 2) {
+		            int row = table.rowAtPoint(e.getPoint());
+		            int col = table.columnAtPoint(e.getPoint());
 
-		table.setEnabled(true);
+		            System.out.println("Linha clicada: " + row);
+		            System.out.println("Coluna clicada: " + col);
+
+		            // Verifique se a linha clicada não está entre as últimas três
+		            if (row < table.getRowCount() - 3 && col != 0 && col != 6) {
+		                // Obtenha o valor da célula clicada
+		                Object cellValue = table.getValueAt(row, col);
+		                String escolhido = "";
+		                switch (col) {
+		                case 1:
+		                    escolhido = "Digite a nova data (formato DD/MM/YYYY):";
+		                    break;
+		                case 2:
+		                    escolhido = "Digite a hora de início da jornada (formato HH:MM):";
+		                    break;
+		                case 3:
+		                    escolhido = "Digite a hora de fim da jornada (formato HH:MM):";
+		                    break;
+		                case 4:
+		                    escolhido = "Digite a hora de início do almoço (formato HH:MM):";
+		                    break;
+		                case 5:
+		                    escolhido = "Digite a hora de fim do almoço (formato HH:MM):";
+		                    break;
+		                case 7:
+		                    escolhido = "Digite a porcentagem (70, 110 ou 0):";
+		                    break;
+		                // Adicione mais casos conforme necessário
+		                }
+
+		                // Exiba o valor da célula em um JOptionPane para edição
+		                String novoValor = JOptionPane.showInputDialog(escolhido, cellValue);
+		                if (novoValor != null) {
+		                    // Validação de entrada
+		                    if ((col >= 1 && col <= 5) && !novoValor.matches("\\d{2}/\\d{2}/\\d{4}")
+		                            && !novoValor.matches("\\d{2}:\\d{2}")) {
+		                        JOptionPane.showMessageDialog(null,
+		                                "Por favor, insira a data ou hora no formato correto (DD/MM/YYYY ou HH:MM).");
+		                    } else if (col == 7
+		                            && !(novoValor.equals("70") || novoValor.equals("110") || novoValor.equals("0"))) {
+		                        JOptionPane.showMessageDialog(null,
+		                                "Por favor, insira o valor da porcentagem 70 ou 110.");
+		                    } else {
+		                        // Atualize o valor na célula
+		                        table.setValueAt(novoValor, row, col);
+		                    }
+		                }
+		            }
+		        }
+		    }
+		});
+
+
+
 
 		DefaultTableCellRenderer centralizar = new Centralizar();
 		for (int i = 0; i < table.getColumnCount(); i++) {
@@ -84,12 +136,10 @@ public class JanelaPrincipal extends JFrame {
 		contentPane.setLayout(null);
 
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(10, 52, 1054, 427);
+		scrollPane.setBounds(10, 52, 1054, 326);
 		contentPane.add(scrollPane);
 
-		// Criando o primeiro seletor de data
 		JDateChooser dateChooser1 = utils.createFormattedDateChooser("##/##/####");
-	//	utils.MascaraData(dateChooser1, "dd/MM/yy");
 		dateChooser1.setPreferredSize(new Dimension(150, 30));
 		dateChooser1.setBounds(10, 11, 150, 30);
 		contentPane.add(new JLabel("Data Inicial:"));
@@ -103,40 +153,48 @@ public class JanelaPrincipal extends JFrame {
 
 		JButton btnPesquisar = new JButton("Pesquisar");
 		btnPesquisar.setBounds(340, 11, 127, 30);
+		btnPesquisar.setPreferredSize(new Dimension(150, 50));
+
 		btnPesquisar.addActionListener(e -> {
-		    // Validar datas antes de prosseguir
-		    if (!utils.validarDatasSelecionadas(dateChooser1, dateChooser2)) {
-		        return; // Saia do método se as datas estiverem vazias
-		    }
+			if (!utils.validarDatasSelecionadas(dateChooser1, dateChooser2)) {
+				return;
+			}
 
-		    // Converte as datas selecionadas para LocalDate
-		    LocalDate startDate = dateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		    LocalDate endDate = dateChooser2.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			LocalDate startDate = dateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			LocalDate endDate = dateChooser2.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-		    // Verificar se a data inicial é posterior à data final
-		    if (startDate.isAfter(endDate)) {
-		        JOptionPane.showMessageDialog(null, "A data inicial não pode ser posterior à data final.", "Erro", JOptionPane.ERROR_MESSAGE);
-		        return;
-		    }
+			if (startDate.isAfter(endDate)) {
+				JOptionPane.showMessageDialog(null, "A data inicial não pode ser posterior à data final.", "Erro",
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 
-		    // Verificar se as datas estão no mês anterior em relação à data atual
-		    LocalDate dataAtual = LocalDate.now();
-		    boolean mesAnterior = startDate.isBefore(dataAtual) && startDate.getMonthValue() == dataAtual.getMonthValue();
+			LocalDate dataAtual = LocalDate.now();
 
-		    // Executa a pesquisa com as datas selecionadas
-		    listar(startDate, endDate);
+			@SuppressWarnings("unused")
+			boolean mesAnterior = startDate.isBefore(dataAtual)
+					&& startDate.getMonthValue() == dataAtual.getMonthValue();
 
-		        setTitle("Controle de Jornada - " + utils.converterFormatoData(startDate) + " a " + utils.converterFormatoData(endDate));
-		    
+			listar(startDate, endDate);
+
+			setTitle("Controle de Jornada - " + Utils.converterFormatoData(startDate) + " a "
+					+ Utils.converterFormatoData(endDate));
+
 		});
 		contentPane.add(btnPesquisar);
+
+		JButton btnCadastrar = new JButton("CADASTRAR");
+		btnCadastrar.setBounds(79, 389, 127, 90);
+		contentPane.add(btnCadastrar);
+
+		JButton btnAtualizar = new JButton("ATUALIZAR");
+		btnAtualizar.setBounds(236, 389, 127, 90);
+		contentPane.add(btnAtualizar);
 	}
 
 	String msg = "";
 	boolean hr70 = false;
 	boolean hr110 = false;
-
-	// ...
 
 	public void listar(LocalDate dataInicio, LocalDate dataFim) {
 		model.setRowCount(0);
@@ -189,6 +247,9 @@ public class JanelaPrincipal extends JFrame {
 			}
 		}
 
+		int rowCount = table.getRowCount();
+		System.out.println("Número de linhas: " + rowCount);
+
 		model.addRow(new Object[] { "**********************", "**********************", "**********************",
 				"**********************", "**********************", "**********************", "**********************",
 				"**********************" });
@@ -203,33 +264,18 @@ public class JanelaPrincipal extends JFrame {
 					"Hora Mensal 110%", utils.formatarDuration(cem110), "------------" });
 		}
 
-		// Notificar a tabela sobre as mudanças
 		((DefaultTableModel) table.getModel()).fireTableDataChanged();
 	}
 
 	private boolean jornadaAdicionada(Jornada jornada) {
 		int rowCount = model.getRowCount();
 		for (int i = 0; i < rowCount; i++) {
-			LocalDateTime existingDatJornada = utils.converterFormatoData((String) model.getValueAt(i, 1));
+			LocalDateTime existingDatJornada = Utils.converterFormatoData((String) model.getValueAt(i, 1));
 			if (existingDatJornada.equals(jornada.getEndJornada())) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	
-	 public static JanelaPrincipal getInstance(JornadaController jornadaController, LocalDate dataInicio, LocalDate dataFim) {
-	        if (instance == null) {
-	            instance = new JanelaPrincipal(jornadaController, dataInicio, dataFim);
-	        }
-	        
-	        if (instance != null && instance.isVisible()) {
-	            // Se estiver aberta, traga-a para frente
-	            instance.toFront();
-	        }
-	        return instance;
-	    }
-	 
-	 
+
 }

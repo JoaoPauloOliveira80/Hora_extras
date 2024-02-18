@@ -3,8 +3,8 @@ package application.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import application.JornadaService;
 import application.model.Jornada;
+import application.service.JornadaService;
 
 public class JornadaController {
 

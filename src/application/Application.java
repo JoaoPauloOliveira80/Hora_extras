@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import application.controller.JornadaController;
 import application.dao.JornadaDAO;
 import application.grafic.JanelaPrincipal;
+import application.service.JornadaService;
 
 public class Application {
 	public static void main(String[] args) {

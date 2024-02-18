@@ -14,7 +14,7 @@ import application.model.Jornada;
 public class JornadaDAO {
 
 	public List<Jornada> listarPorPeriodo(LocalDateTime dataInicio, LocalDateTime dataFim) {
-		String sql = "SELECT * FROM JornadasTrabalho WHERE startJornada BETWEEN ? AND ? ORDER BY startJornada ASC";
+		String sql = "SELECT * FROM jornadastrabalhocopia WHERE startJornada BETWEEN ? AND ? ORDER BY startJornada ASC";
 
 	    List<Jornada> lista = new ArrayList<>();
 
@@ -82,6 +82,45 @@ public class JornadaDAO {
 
 	    return lista;
 	}
+	
+	public void update(Jornada jornada) {
+	    String sql = "UPDATE jornadastrabalhocopia SET startJornada=?, endJornada=?, startAlmoco=?, endAlmoco=?, porcentagem=? WHERE id=?";
+
+	    Connection conn = null;
+	    PreparedStatement pstm = null;
+
+	    try {
+	        conn = ConnectionDB.create();
+	        pstm = conn.prepareStatement(sql);
+
+	        // Define os parâmetros para a atualização
+	        pstm.setTimestamp(1, Timestamp.valueOf(jornada.getStartJornada()));
+	        pstm.setTimestamp(2, Timestamp.valueOf(jornada.getEndJornada()));
+	        pstm.setTimestamp(3, Timestamp.valueOf(jornada.getStartRefeicao()));
+	        pstm.setTimestamp(4, Timestamp.valueOf(jornada.getEndRefeicao()));
+	        pstm.setInt(5, jornada.getPorcentagem());
+	        pstm.setInt(6, jornada.getId()); // Supondo que você tenha um campo "id" na sua tabela
+
+	        // Executa a atualização
+	        pstm.executeUpdate();
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (pstm != null) {
+	                pstm.close();
+	            }
+
+	            if (conn != null) {
+	                conn.close();
+	            }
+	        } catch (Exception e2) {
+	            e2.printStackTrace();
+	        }
+	    }
+	}
+
 
 
 	

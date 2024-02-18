@@ -3,6 +3,7 @@ package application.model;
 import java.time.LocalDateTime;
 
 public class Jornada {
+	private int id;
 	private LocalDateTime startJornada;
 	private LocalDateTime endJornada;
 	private LocalDateTime startAlmoco;
@@ -13,14 +14,24 @@ public class Jornada {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Jornada(LocalDateTime startJornada, LocalDateTime endJornada, LocalDateTime startRefeicao,
+	public Jornada(int id,LocalDateTime startJornada, LocalDateTime endJornada, LocalDateTime startRefeicao,
 			LocalDateTime endRefeicao, int porcentagem) {
-		super();
+		this.id = id;
 		this.startJornada = startJornada;
 		this.endJornada = endJornada;
 		this.startAlmoco = startRefeicao;
 		this.endAlmoco = endRefeicao;
 		this.porcentagem = porcentagem;
+	}
+	
+	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public LocalDateTime getStartJornada() {

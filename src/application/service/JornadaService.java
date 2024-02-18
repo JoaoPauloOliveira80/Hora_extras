@@ -1,4 +1,4 @@
-package application;
+package application.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -23,6 +23,10 @@ public class JornadaService {
 	public List<Jornada> listAll() {
 		return jornadaDAO.listarTodas();
 	}
+	
+	 public void updateJornada(Jornada jornada) {
+	        jornadaDAO.update(jornada);
+	    }
 	public void getListaPeriodo(LocalDateTime dataInicio, LocalDateTime dataFim) {
 		List<Jornada> jornadas = jornadaDAO.listarPorPeriodo(dataInicio, dataFim);
 		LocalDateTime diaTrabalho;
