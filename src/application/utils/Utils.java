@@ -1,6 +1,6 @@
 package application.utils;
 
-import java.awt.Color;
+import java.awt.Dimension;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -13,8 +13,6 @@ import java.util.Date;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 
@@ -188,4 +186,16 @@ public class Utils {
         return dateTime.format(formatter);
     }
 
+	
+	public static JFormattedTextField createDateField() {
+        try {
+            MaskFormatter mask = new MaskFormatter("##/##/####");
+            JFormattedTextField dateField = new JFormattedTextField(mask);
+            dateField.setPreferredSize(new Dimension(150, 30));
+            return dateField;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

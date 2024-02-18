@@ -21,6 +21,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
 
 import application.controller.JornadaController;
 import application.model.Centralizar;
@@ -139,17 +140,26 @@ public class JanelaPrincipal extends JFrame {
 		scrollPane.setBounds(10, 52, 1054, 326);
 		contentPane.add(scrollPane);
 
+		// Cria uma instância da classe Utils
+		Utils utils = new Utils();
+
+		// Cria o primeiro JDateChooser
+		// Cria o primeiro JDateChooser
 		JDateChooser dateChooser1 = utils.createFormattedDateChooser("##/##/####");
+		((JTextFieldDateEditor) dateChooser1.getDateEditor()).setEditable(false);
 		dateChooser1.setPreferredSize(new Dimension(150, 30));
 		dateChooser1.setBounds(10, 11, 150, 30);
 		contentPane.add(new JLabel("Data Inicial:"));
 		contentPane.add(dateChooser1);
 
+		// Cria o segundo JDateChooser
 		JDateChooser dateChooser2 = utils.createFormattedDateChooser("##/##/####");
+		((JTextFieldDateEditor) dateChooser2.getDateEditor()).setEditable(false);
 		dateChooser2.setPreferredSize(new Dimension(150, 30));
 		dateChooser2.setBounds(180, 11, 150, 30);
 		contentPane.add(new JLabel("Data Final:"));
 		contentPane.add(dateChooser2);
+
 
 		JButton btnPesquisar = new JButton("Pesquisar");
 		btnPesquisar.setBounds(340, 11, 127, 30);
